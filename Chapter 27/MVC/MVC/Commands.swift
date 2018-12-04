@@ -16,7 +16,7 @@ enum Command : String {
         Command.LIST_CITIES, Command.SEARCH_CITIES, Command.DELETE_CITY];
     
     static func getFromInput(input:String) -> Command? {
-        switch (input.lowercaseString) {
+        switch (input.lowercased()) {
         case "l":
             return Command.LIST_PEOPLE;
         case "a":

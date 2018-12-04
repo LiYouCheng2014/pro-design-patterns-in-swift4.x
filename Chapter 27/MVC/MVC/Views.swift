@@ -12,7 +12,7 @@ class PersonListView : View {
     
     func execute() {
         for person in people {
-            println(person);
+            print(person);
         }
     }
 }
@@ -26,7 +26,7 @@ class CityListView : View {
     
     func execute() {
         for city in self.cities {
-            println("City: \(city)");
+            print("City: \(city)");
         }
     }
 }

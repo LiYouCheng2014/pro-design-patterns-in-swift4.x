@@ -4,7 +4,7 @@ func == (lhs:Person, rhs:Person) -> Bool {
     return lhs.name == rhs.name && lhs.city == rhs.city;
 }
 
-class Person : Equatable, Printable {
+class Person : Equatable {
     var name:String;
     var city:String;
     
@@ -46,15 +46,15 @@ class MemoryRepository : Repository {
     }
     
     func removePerson(name: String) {
-        let nameLower = name.lowercaseString;
+        let nameLower = name.lowercased();
         self.peopleArray = peopleArray
-            .filter({$0.name.lowercaseString != nameLower});
+            .filter({$0.name.lowercased() != nameLower});
     }
     
     func updatePerson(name: String, newCity: String) {
-        let nameLower = name.lowercaseString;
-        let test:Person -> Bool = {p in return p.name.lowercaseString == nameLower};
-        if let person = peopleArray.first(test) {
+        let nameLower = name.lowercased();
+        let test:(Person) -> Bool = {p in return p.name.lowercased() == nameLower};
+        if let person = peopleArray.first(test: test as (Person) -> Bool) {
             person.city = newCity;
         }
     }

@@ -8,7 +8,7 @@ class ControllerBase {
     }
     
     func handleCommand(command:Command, data:[String]) -> View? {
-        return nextController?.handleCommand(command, data:data);
+        return nextController?.handleCommand(command: command, data:data);
     }
 }
 
@@ -19,15 +19,15 @@ class PersonController : ControllerBase {
         case .LIST_PEOPLE:
             return listAll();
         case .ADD_PERSON:
-            return addPerson(data[0], city: data[1]);
+            return addPerson(name: data[0], city: data[1]);
         case .DELETE_PERSON:
-            return deletePerson(data[0]);
+            return deletePerson(name: data[0]);
         case .UPDATE_PERSON:
-            return updatePerson(data[0], newCity:data[1]);
+            return updatePerson(name: data[0], newCity:data[1]);
         case .SEARCH:
-            return search(data[0]);
+            return search(term: data[0]);
         default:
-            return super.handleCommand(command, data: data);
+            return super.handleCommand(command: command, data: data);
         }
     }
     
@@ -36,25 +36,27 @@ class PersonController : ControllerBase {
     }
     
     private func addPerson(name:String, city:String) -> View {
-        repository.addPerson(Person(name, city));
+        repository.addPerson(person: Person(name, city));
         return listAll();
     }
     
     private func deletePerson(name:String) -> View {
-        repository.removePerson(name);
+        repository.removePerson(name: name);
         return listAll();
     }
     
     private func updatePerson(name:String, newCity:String) -> View {
-        repository.updatePerson(name, newCity: newCity);
+        repository.updatePerson(name: name, newCity: newCity);
         return listAll();
     }
     
     private func search(term:String) -> View {
-        let termLower = term.lowercaseString;
+        let termLower = term.lowercased();
         let matches = repository.People.filter({ person in
-            return person.name.lowercaseString.rangeOfString(termLower) != nil
-                || person.city.lowercaseString.rangeOfString(termLower) != nil});
+            return person.name.lowercased().range(of: termLower) != nil
+                || person.city.lowercased().range(of: termLower) != nil
+            
+        });
         return PersonListView(data: matches);
     }
 }
@@ -66,11 +68,11 @@ class CityController : ControllerBase {
         case .LIST_CITIES:
             return listAll();
         case .SEARCH_CITIES:
-            return search(data[0]);
+            return search(city: data[0]);
         case .DELETE_CITY:
-            return delete(data[0]);
+            return delete(city: data[0]);
         default:
-            return super.handleCommand(command, data: data);
+            return super.handleCommand(command: command, data: data);
         }
     }
     
@@ -79,18 +81,18 @@ class CityController : ControllerBase {
     }
     
     private func search(city:String) -> View {
-        let cityLower = city.lowercaseString;
+        let cityLower = city.lowercased();
         let matches:[Person] = repository.People
-            .filter({ $0.city.lowercaseString == cityLower });
+            .filter({ $0.city.lowercased() == cityLower });
         return PersonListView(data: matches);
     }
     
     private func delete(city:String) -> View {
-        let cityLower = city.lowercaseString;
+        let cityLower = city.lowercased();
         let toDelete = repository.People
-            .filter({ $0.city.lowercaseString == cityLower });
+            .filter({ $0.city.lowercased() == cityLower });
         for person in toDelete {
-            repository.removePerson(person.name);
+            repository.removePerson(name: person.name);
         }
         return PersonListView(data: repository.People);
     }
